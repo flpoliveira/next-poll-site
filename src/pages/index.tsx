@@ -1,21 +1,27 @@
 import type { NextPage } from 'next'
+import { useRef } from 'react';
 import { trpc } from '../utils/trpc';
 
 const QuestionCreator: React.FC = () => {
+
+  const inputRef = useRef<HTMLInputElement>(null);
   const client = trpc.useContext();
-  const { mutate } = trpc.useMutation("questions.create", {
+  const { mutate, isLoading } = trpc.useMutation("questions.create", {
     onSuccess: () => {
       client.invalidateQueries(["questions.get-all"]);
+      if (!inputRef.current) return;
+      inputRef.current.value = "";
     }
   });
 
   return (
     <input 
+      ref={inputRef}
+      disabled={isLoading}
       onKeyDown={
         (event) => {
           if (event.key === "Enter") {
             mutate({ question: event.currentTarget.value });
-            event.currentTarget.value = "";
           }
         }
       }
