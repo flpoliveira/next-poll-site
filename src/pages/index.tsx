@@ -5,7 +5,7 @@ import { trpc } from '../utils/trpc';
 const Home: NextPage = (props: any) => {
 
 
-  const { data, isLoading } = trpc.useQuery(["getAllQuestions"]);
+  const { data, isLoading } = trpc.useQuery(["questions.get-all"]);
 
   if (isLoading || !data) return <div>Loading...</div>;
 
